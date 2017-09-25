@@ -168,11 +168,11 @@ public class ContextualBandits : MonoBehaviour
 				header.transform.parent = parent.transform.parent;
 			}
 
-			Transform temp = header.transform.FindChild("SetValue");
+			Transform temp = header.transform.Find("SetValue");
 			Text setValueText = temp.GetComponent<Text>();
 			setValueText.text = ms_setRate[i].ToString();
 
-			temp = header.transform.FindChild("RLValue");
+			temp = header.transform.Find("RLValue");
 			Text calValueText = temp.GetComponent<Text>();
 			calValueText.text = m_rateCounter[i].ToString();
 			valueText[i] = calValueText;
