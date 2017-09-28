@@ -21,15 +21,35 @@ namespace JojoRLCore
 			}
 		}
 
-		private Dictionary<int, IAction> actionDict = new Dictionary<int, IAction>();
+		public Dictionary<int, IAction> actionDict = new Dictionary<int, IAction>();
 		static private List<CaculateData> calData = new List<CaculateData>();
+		private int curExcuteAction = -1;
 
-		public void CumulationValue(int key, float value)
+		public void AfterAddActions()
+		{
+			float account = 0f;
+			foreach (var key in actionDict.Keys)
+			{
+				if (actionDict[key].SelfRate > float.Epsilon)
+					account += actionDict[key].SelfValue;
+			}
+
+			foreach (var key in actionDict.Keys)
+			{
+				if (actionDict[key].SelfValue > float.Epsilon)
+					actionDict[key].SelfRate = actionDict[key].SelfValue / account;
+				else
+					actionDict[key].SelfRate = 0f;
+			}
+		}
+
+		public void CumulationValue(int key, float value, float studyRate)
 		{
 			IAction action = null;
 			if(actionDict.TryGetValue(key, out action))
 			{
-				action.SelfValue += value;
+				action.SelfRate += studyRate * (value - action.SelfRate);
+				UpdateActionRate();
 			}
 		}
 
@@ -41,10 +61,10 @@ namespace JojoRLCore
 			calData.Clear();
 			foreach(var key in actionDict.Keys)
 			{
-				if (actionDict[key].SelfValue < 0)
+				if (actionDict[key].SelfRate < float.Epsilon)
 					continue;
 
-				maxValue += actionDict[key].SelfValue;
+				maxValue += actionDict[key].SelfRate;
 				CaculateData newData = new CaculateData(key, maxValue);
 				calData.Add(newData);
 			}
@@ -74,13 +94,38 @@ namespace JojoRLCore
 
 			return retKey;
 		}
+
+		private void UpdateActionRate()
+		{
+			float account = 0f;
+			foreach(var key in actionDict.Keys)
+			{
+				if (actionDict[key].SelfRate > float.Epsilon)
+					account += actionDict[key].SelfRate;
+			}
+
+			foreach (var key in actionDict.Keys)
+			{
+				if (actionDict[key].SelfRate > float.Epsilon)
+					actionDict[key].SelfRate = actionDict[key].SelfRate / account;
+				else
+					actionDict[key].SelfRate = 0f;
+			}
+		}
 	}
 
 
 	public class IAction
 	{
-		int id;
-		float selfValue = 100;  // base value, can be reduce, and will never be chosen when less then 0
+		protected int id;
+		protected float selfValue = 100f;  // base value, can be reduce, and will never be chosen when less then 0
+		protected float selfRate = 0f;
+
+		public float SelfRate
+		{
+			set { selfRate = value; }
+			get { return selfRate; }
+		}
 
 		public float SelfValue
 		{
@@ -88,9 +133,15 @@ namespace JojoRLCore
 			get{ return selfValue;}	
 		}
 
+		public int ID
+		{
+			set { id = value; }
+			get { return id; }
+		}
+
 		virtual public int GetKey()
 		{
-			return 0;
+			return id;
 		}
 
 		// what this action do! The params is not designed now, maybe i will package a class to do this
