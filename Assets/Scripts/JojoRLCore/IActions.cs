@@ -25,6 +25,8 @@ namespace JojoRLCore
 		static private List<CaculateData> calData = new List<CaculateData>();
 		private int curExcuteAction = -1;
 
+		public int CurAction { get { return curExcuteAction; } }
+
 		public void AfterAddActions()
 		{
 			float account = 0f;
@@ -92,6 +94,7 @@ namespace JojoRLCore
 				actionDict[retKey].Excute(agentData);
 			}
 
+			curExcuteAction = retKey;
 			return retKey;
 		}
 

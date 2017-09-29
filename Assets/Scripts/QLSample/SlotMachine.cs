@@ -48,6 +48,6 @@ public class SlotMachine {
 		if (ret < 0)
 			ret = boxCount - 1;
 
-		return ret;
+		return ret + 1;
 	}
 }

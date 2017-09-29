@@ -58,8 +58,7 @@ public class ContextualBandits_QL : MonoBehaviour
 			return;
 
 		int ret = slotMachine.CreateResult();
-
-		data.lastResult = data.guessResult;
+		
 		agent.Excute(data);
 		int guessRet = data.guessResult;
 
@@ -71,6 +70,7 @@ public class ContextualBandits_QL : MonoBehaviour
 			agent.AddValue(0);
 		}
 
+		data.lastResult = ret;
 		CaculateRateCounter(ref m_rateCounter);
 
 		// 

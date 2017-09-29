@@ -28,7 +28,8 @@ public class ContextualBandits : MonoBehaviour
 	private int m_lastRet = -1;		// 上一次的结果
 	private int m_calTime = 0;		// 计算总次数
 	private int m_correctTime = 0;	// 结果正确的次数
-	private float m_correctRate = 0;	// 准确率
+	private float m_correctRate = 0;    // 准确率
+	private int m_trainCount = 0;
 	// Use this for initialization
 	void Start()
 	{
@@ -74,7 +75,7 @@ public class ContextualBandits : MonoBehaviour
 		if (guessRet != ret)
 			r = 0;
 
-		m_stateAndRet[m_lastRet].ret[guessRet] = m_stateAndRet[m_lastRet].ret[guessRet] + ms_learnRate * (r - m_stateAndRet[m_lastRet].ret[guessRet]);
+		m_stateAndRet[m_lastRet].ret[guessRet] += ms_learnRate * (r - m_stateAndRet[m_lastRet].ret[guessRet]);
 		ReCaculateRate(ref m_stateAndRet[m_lastRet].ret);
 		CaculateRateCounter(ref m_rateCounter);
 		m_lastRet = ret;
@@ -82,6 +83,7 @@ public class ContextualBandits : MonoBehaviour
 		// 
 		if (guessRet == ret)
 			m_correctTime++;
+		m_trainCount++;
 		m_calTime++;
 		if(m_calTime >= 200)
 		{
@@ -123,7 +125,7 @@ public class ContextualBandits : MonoBehaviour
 		float account = 0;
 		for (int i = 0; i < ms_count; i++)
 		{
-			account += ms_setRate[i];
+			account += rates[i];
 		}
 
 		for (int i = 0; i < ms_count; i++)
@@ -153,9 +155,12 @@ public class ContextualBandits : MonoBehaviour
 	#region UI
 	Text[] valueText;
 	Text correctRateText;
+	Text trainCountText;
+	
 	private void InitUI()
 	{
 		correctRateText = GameObject.Find("CollectRate").GetComponent<Text>();
+		trainCountText = GameObject.Find("TrainCount").GetComponent<Text>();
 
 		valueText = new Text[ms_count];
 		GameObject parent = GameObject.Find("Box");
@@ -182,6 +187,7 @@ public class ContextualBandits : MonoBehaviour
 	private void Refresh()
 	{
 		correctRateText.text = m_correctRate.ToString();
+		trainCountText.text = m_trainCount.ToString();
 
 		for (int i = 0; i < ms_count; i++)
 		{

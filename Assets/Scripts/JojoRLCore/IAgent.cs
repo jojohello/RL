@@ -56,7 +56,7 @@ namespace JojoRLCore
 			if (states.TryGetValue(curState, out state) == false)
 				return;
 
-			state.ActionMonitor.CumulationValue(curState, v, StudyRate);
+			state.ActionMonitor.CumulationValue(state.ActionMonitor.CurAction, v, StudyRate);
 		}
 	}
 }
