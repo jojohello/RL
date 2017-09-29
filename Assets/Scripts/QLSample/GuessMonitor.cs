@@ -17,7 +17,7 @@ public class GuessMonitor : IStateMonitor {
 		int machineResult = GetKeyByData(data);
 		IState newState = new GuessState(machineResult);
 
-		return null;
+		return newState;
 	}
 }
 

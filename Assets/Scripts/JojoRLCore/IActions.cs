@@ -30,7 +30,7 @@ namespace JojoRLCore
 			float account = 0f;
 			foreach (var key in actionDict.Keys)
 			{
-				if (actionDict[key].SelfRate > float.Epsilon)
+				if (actionDict[key].SelfValue > float.Epsilon)
 					account += actionDict[key].SelfValue;
 			}
 

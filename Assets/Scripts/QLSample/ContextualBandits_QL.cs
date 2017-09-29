@@ -96,12 +96,12 @@ public class ContextualBandits_QL : MonoBehaviour
 			rateCount[i] = 0;
 
 		int endStateCount = agent.EndNodeStates.Count;
-		for (int i = 0; i < endStateCount; i++)
+		for (int i = 1; i <= endStateCount; i++)
 		{
-			for (int j = 0; j < boxCount; j++)
+			for (int j = 1; j <= boxCount; j++)
 			{
 				account += agent.EndNodeStates[i].ActionMonitor.actionDict[j].SelfRate;
-				rateCount[j] += agent.EndNodeStates[i].ActionMonitor.actionDict[j].SelfRate;
+				rateCount[j-1] += agent.EndNodeStates[i].ActionMonitor.actionDict[j].SelfRate;
 			}
 		}
 

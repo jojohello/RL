@@ -33,5 +33,5 @@ public class GuessData: IAgentData
 {
 	public int boxCount = 0;
 	public int lastResult = 0;
-	public int guessResult = -1;
+	public int guessResult = 1;
 }
