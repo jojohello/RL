@@ -7,13 +7,6 @@ namespace JojoRLCore
 	public class IStateMonitor
 	{
 		Dictionary<int, IState> states = new Dictionary<int, IState>();
-		int curAction = -1;
-
-		public int CurAction
-		{
-			set { curAction = value; }
-			get { return curAction; }
-		}
 
 		public virtual int GetKeyByData(IAgentData data)
 		{
@@ -43,7 +36,8 @@ namespace JojoRLCore
 
 			if (states[key].IsEndNode())
 			{
-				states[key].ActionMonitor.ConfirmAndExcuteAction(data);
+				agent.curAction = states[key].ActionMonitor.ConfirmAndExcuteAction(data);
+				agent.curState = states[key].WorldIndex;
 				return states[key].WorldIndex;
 			}	
 			else

@@ -23,9 +23,6 @@ namespace JojoRLCore
 
 		public Dictionary<int, IAction> actionDict = new Dictionary<int, IAction>();
 		static private List<CaculateData> calData = new List<CaculateData>();
-		private int curExcuteAction = -1;
-
-		public int CurAction { get { return curExcuteAction; } }
 
 		public void AfterAddActions()
 		{
@@ -93,8 +90,7 @@ namespace JojoRLCore
 				retKey = calData[curIndex].key;
 				actionDict[retKey].Excute(agentData);
 			}
-
-			curExcuteAction = retKey;
+			
 			return retKey;
 		}
 

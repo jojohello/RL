@@ -12,8 +12,10 @@ namespace JojoRLCore
 		protected Dictionary<int, IState> states = new Dictionary<int, IState>(); // add the end Node to this dictionary, may it easy to reference
 		protected IStateMonitor root;
 
-		private int curState = -1;
-		private int lastState = -1;
+		public int curState = -1;
+		public int curAction = -1;
+		public int lastState = -1;
+		public int lastAction = -1;
 
 		bool isInit = false;
 
@@ -47,7 +49,8 @@ namespace JojoRLCore
 				return;
 
 			lastState = curState;
-			curState = root.Excute(data, this);
+			lastAction = curAction;
+			root.Excute(data, this);
 		}
 
 		public void AddValue(float v)
@@ -56,7 +59,7 @@ namespace JojoRLCore
 			if (states.TryGetValue(curState, out state) == false)
 				return;
 
-			state.ActionMonitor.CumulationValue(state.ActionMonitor.CurAction, v, StudyRate);
+			state.ActionMonitor.CumulationValue(curAction, v, StudyRate);
 		}
 	}
 }
